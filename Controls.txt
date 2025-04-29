@@ -1,0 +1,53 @@
+Space - start/stop
+
+n - new rythm and melody
+
+m - new melody
+
+t - tune on/off
+
+b - metronome on/off
+
+Left Click Note - select/deselect note
+
+Right Click Note - switch positions with selected note
+
+Left Click Letter - add/remove note from scale
+
+Delete - delete selected note
+
+Backspace - shorten selected note
+
+Ctrl+Backspace - minimize selected note
+
+Up - move selected note up
+
+Ctrl+Up - move selected note to top
+
+Down - move selected note down
+
+Ctrl+Down - move selected note to bottom
+
+Right - move selected note right
+
+Ctrl+Right - move selected note to end of rest
+
+Ctrl+Shift+Right - move selected note to end
+
+Left - move selected note left
+
+Ctrl+Left - move selected note to beginning of rest
+
+Ctrl+Shift+Left - move selected note to beginning
+
+d - exend selected note right
+
+Ctrl+d - extend selected note to end of rest
+
+a - extend selected note left
+
+Ctrl+a - extend selected note to beginning of rest
+
+c - create note at rest
+
+Ctrl+c - fill rest with note

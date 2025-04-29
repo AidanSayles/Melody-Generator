@@ -1,7 +1,12 @@
+import os
+import sys
 import ast
 import linecache
 import random
 import pygame
+
+directory = os.path.dirname(os.path.abspath(__file__))
+os.chdir(directory)
 
 pygame.mixer.init()
 pygame.mixer.set_num_channels(32)  # Increase the number of channels
@@ -43,7 +48,15 @@ inactiveNotes  = []
 noteHeights = {"G": 2, "g": 52, "F": 102, "f": 152, "e": 202, "D": 252, "d": 302, "C": 352, "c": 402, "b": 452, "A": 502, "a": 552}
 
 def createRythm():
-    rythm = list(ast.literal_eval(linecache.getline("Rythms.txt", random.randint(1, 3850533)).strip()))
+    filePick = random.randint(1, 4)
+    if filePick == 1:
+        rythm = list(ast.literal_eval(linecache.getline("Rythms1.txt", random.randint(1, 962634)).strip()))
+    elif filePick == 2:
+        rythm = list(ast.literal_eval(linecache.getline("Rythms2.txt", random.randint(1, 962633)).strip()))
+    elif filePick == 3:
+        rythm = list(ast.literal_eval(linecache.getline("Rythms3.txt", random.randint(1, 962633)).strip()))
+    else:
+        rythm = list(ast.literal_eval(linecache.getline("Rythms4.txt", random.randint(1, 962633)).strip()))
     rythm = distributeRests(rythm)
     return rythm
 
