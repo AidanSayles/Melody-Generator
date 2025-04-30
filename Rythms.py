@@ -5,11 +5,17 @@ import linecache
 import random
 import pygame
 
-directory = os.path.dirname(os.path.abspath(__file__))
-os.chdir(directory)
+def getResourcePath(relativePath):
+    str()
+    try:
+        basePath = sys._MEIPASS
+    except AttributeError:
+        basePath = os.path.abspath(".")
+    return os.path.join(basePath, relativePath)
+
 
 pygame.mixer.init()
-pygame.mixer.set_num_channels(32)  # Increase the number of channels
+pygame.mixer.set_num_channels(32)
 
 clock = pygame.time.Clock()
 
@@ -22,10 +28,12 @@ beatLength = 16
 
 PRX = 0
 PRY = 0
-PianoRoll = pygame.transform.scale(pygame.image.load("images/PianoRoll.png"), (852, 602))
-PRLetters = pygame.transform.scale(pygame.image.load("images/PRLetters.png"), (850, 600))
-PRNote = pygame.transform.scale(pygame.image.load("images/Note.png"), (48, 48))
-PRInactiveLetter = pygame.transform.scale(pygame.image.load("images/InactiveLetter.png"), (48, 48))
+PianoRoll = pygame.transform.scale(pygame.image.load(getResourcePath("images/PianoRoll.png")), (852, 602))
+PRLetters = pygame.transform.scale(pygame.image.load(getResourcePath("images/PRLetters.png")), (850, 600))
+PRNote = pygame.transform.scale(pygame.image.load(getResourcePath("images/Note.png")), (48, 48))
+PRInactiveLetter = pygame.transform.scale(pygame.image.load(getResourcePath("images/InactiveLetter.png")), (48, 48))
+PRCurrentNote = pygame.image.load(getResourcePath("images/PlayNote.png"))
+PRSelectedNote = pygame.image.load(getResourcePath("images/SelectNote.png"))
 letterCollidePoints = [
     pygame.Rect(PRX + 1, PRY + 1, 48, 48),
     pygame.Rect(PRX + 1, PRY + 51, 48, 48),
@@ -50,13 +58,13 @@ noteHeights = {"G": 2, "g": 52, "F": 102, "f": 152, "e": 202, "D": 252, "d": 302
 def createRythm():
     filePick = random.randint(1, 4)
     if filePick == 1:
-        rythm = list(ast.literal_eval(linecache.getline("Rythms1.txt", random.randint(1, 962634)).strip()))
+        rythm = list(ast.literal_eval(linecache.getline(getResourcePath("RythmsTxts/Rythms1.txt"), random.randint(1, 962634)).strip()))
     elif filePick == 2:
-        rythm = list(ast.literal_eval(linecache.getline("Rythms2.txt", random.randint(1, 962633)).strip()))
+        rythm = list(ast.literal_eval(linecache.getline(getResourcePath("RythmsTxts/Rythms2.txt"), random.randint(1, 962633)).strip()))
     elif filePick == 3:
-        rythm = list(ast.literal_eval(linecache.getline("Rythms3.txt", random.randint(1, 962633)).strip()))
+        rythm = list(ast.literal_eval(linecache.getline(getResourcePath("RythmsTxts/Rythms3.txt"), random.randint(1, 962633)).strip()))
     else:
-        rythm = list(ast.literal_eval(linecache.getline("Rythms4.txt", random.randint(1, 962633)).strip()))
+        rythm = list(ast.literal_eval(linecache.getline(getResourcePath("RythmsTxts/Rythms4.txt"), random.randint(1, 962633)).strip()))
     rythm = distributeRests(rythm)
     return rythm
 
@@ -88,7 +96,7 @@ def createSounds(melody):
                 sound = "sounds/" + note[0] + "#" + note[1:] + ".mp3"
             else:
                 sound = "sounds/" + note[0].upper() + note[1:] + ".mp3"
-            i = pygame.mixer.Sound(sound)
+            i = pygame.mixer.Sound(getResourcePath(sound))
             soundList.append(i)
     return (soundList)
 
@@ -160,13 +168,13 @@ def displayPRNotes(PRNotes):
 
 def displayCurrentNote(info):
     note, position = info
-    PRCurrentNote = pygame.transform.scale(pygame.image.load("images/PlayNote.png"), note.get_size())
-    WIN.blit(PRCurrentNote, position)
+    CurrentNote = pygame.transform.scale(PRCurrentNote, note.get_size())
+    WIN.blit(CurrentNote, position)
 
 def displaySelectedNote(info):
     note, position = info
-    PRSelectedNote = pygame.transform.scale(pygame.image.load("images/SelectNote.png"), note.get_size())
-    WIN.blit(PRSelectedNote, position)
+    SelectedNote = pygame.transform.scale(PRSelectedNote, note.get_size())
+    WIN.blit(SelectedNote, position)
 
 def display(PRNotes, specialNote, noteType):
     displayPianoRoll()
@@ -260,8 +268,8 @@ def main():
 
     run = True
 
-    kick = pygame.mixer.Sound("sounds/kick.mp3")
-    metronomeTick = pygame.mixer.Sound("sounds/metronome.mp3")
+    kick = pygame.mixer.Sound(getResourcePath("sounds/kick.mp3"))
+    metronomeTick = pygame.mixer.Sound(getResourcePath("sounds/metronome.mp3"))
 
     rythm, restMap, restMapDict, melody, noteIndexDict, soundList, PRNotes, noteCollidePoints = newAll()
 
@@ -369,7 +377,6 @@ def main():
                             deleteIndex = restMapDict[beatNum] - getAdjacentRests(restMapDict[beatNum], rythm, "-")
                             for i in range(deleteNum):
                                 del rythm[deleteIndex]
-                                print(f"rythm {rythm}")
                                 del melody[deleteIndex]
                             newNote = newNote + str(deleteNum * 0.25).rstrip('0').rstrip('.')
                             rythm.insert(deleteIndex, ("X" + newNote[1:]))
@@ -520,7 +527,7 @@ def main():
             clock.tick(24)
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
-                    quit()
+                    sys.exit()
             keys = pygame.key.get_pressed()
             if keys[pygame.K_SPACE] and coolDown == 0:
                 play = False
